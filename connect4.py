@@ -29,6 +29,19 @@ def get_next_open_row(board, col):
 def print_board(board):
 	print(np.flip(board, 0))
 
+def check_draw(board):
+	check = 0
+	for c in range(COLUMN_COUNT-3):
+		for r in range(ROW_COUNT):
+			if board[r][c] == 0:
+				check+=1
+	
+	if check == 0:
+		return True
+	else:
+		return False
+				
+
 def winning_move(board, piece):
 	# Check horizontal locations for win
 	for c in range(COLUMN_COUNT-3):
@@ -137,12 +150,39 @@ while not game_over:
 						label = myfont.render("Player 2 wins!!", 1, YELLOW)
 						screen.blit(label, (40,10))
 						game_over = True
-
+			
 			print_board(board)
 			draw_board(board)
 
 			turn += 1
 			turn = turn % 2
 
+			# # check for draw (which only occurs after player 2's turn)
+			if turn == 1 and check_draw(board):
+				label = myfont.render("It's a Draw!!", 1, BLUE)
+				screen.blit(label, (40,10))
+				game_over = True
+
+				
+			
 			if game_over:
-				pygame.time.wait(3000)
+				label = myfont.render("Click to restart ", 1, YELLOW)
+				screen.blit(label, (40,10))
+
+				print_board(board)
+				draw_board(board)
+
+				pygame.display.update()
+
+
+			while(game_over):
+				for event in pygame.event.get():
+					if event.type == pygame.MOUSEBUTTONDOWN:
+						# label = myfont.render("Checkpoint", 1, YELLOW)
+						# screen.blit(label, (40,10))
+						# print_board(board)
+						# draw_board(board)
+
+						board = create_board()
+						game_over = False
+						
